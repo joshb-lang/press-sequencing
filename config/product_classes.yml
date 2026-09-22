@@ -1,0 +1,29 @@
+# A product class is an attribute combination. Classes are referenced by name
+# from rules.yml. They may overlap; a rule tests its classes in the order it
+# lists them and takes the first match.
+#
+# STATUS: first-pass encoding. The attribute names here need to be reconciled
+# with what WorkerBee and Snowflake actually carry before this is trusted.
+# See docs/open-questions.md.
+
+product_classes:
+  rounded_corner:
+    corner: rounded
+  square_corner:
+    corner: square
+
+  gloss_laminated:
+    lamination: gloss
+  matte_laminated:
+    lamination: matte
+
+  # The worked example from the rule vocabulary: 16pt + matte lamination.
+  16pt_matte:
+    stock: 16pt
+    lamination: matte
+
+  cotton:
+    stock: cotton
+
+  holiday_card:
+    product: holiday_card

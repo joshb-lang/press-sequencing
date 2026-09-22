@@ -1,0 +1,25 @@
+# PLACEHOLDER VALUES. Press ids, names and sheet rates below are a working
+# skeleton, not measured figures. `sheets_per_hour` in particular drives every
+# time window in budget.yml, so no output is meaningful until these are real.
+# Lanes 2.1, 2.2 and 3.1 are the corner-alternation lanes.
+
+presses:
+  - id: press_2
+    name: "Press 2"
+    sheets_per_hour: 3000    # placeholder
+    lanes: ["2.1", "2.2"]
+
+  - id: press_3
+    name: "Press 3"
+    sheets_per_hour: 3000    # placeholder
+    lanes: ["3.1"]
+
+  - id: press_5
+    name: "Press 5"
+    sheets_per_hour: 3000    # placeholder
+    lanes: []
+
+  - id: ricoh
+    name: "Ricoh"
+    sheets_per_hour: 1200    # placeholder
+    lanes: []

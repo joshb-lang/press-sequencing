@@ -1,0 +1,40 @@
+# Open batches. batch_id comes from the record and is never recovered from a
+# filename - prefix and extension inconsistencies across WorkerBee, HP and
+# Snowflake have broken joins before.
+
+batches:
+  - batch_id: B-1001
+    sheets: 1200
+    quoted_ship_date: 2026-09-22
+    attributes: {product: business_card, stock: 16pt, lamination: matte, corner: rounded, size: 85x55}
+
+  - batch_id: B-1002
+    sheets: 900
+    quoted_ship_date: 2026-09-22
+    attributes: {product: business_card, stock: 16pt, lamination: matte, corner: square, size: 85x55}
+
+  - batch_id: B-1003
+    sheets: 400
+    quoted_ship_date: 2026-09-21
+    attributes: {product: business_card, stock: 16pt, lamination: gloss, corner: rounded, size: 85x55}
+
+  - batch_id: B-1004
+    sheets: 2400
+    quoted_ship_date: 2026-09-23
+    attributes: {product: postcard, stock: 14pt, lamination: none, corner: square, size: 148x105}
+
+  - batch_id: B-1005
+    sheets: 150
+    quoted_ship_date: 2026-09-22
+    attributes: {product: holiday_card, stock: 16pt, lamination: matte, corner: rounded, size: 148x105}
+
+  - batch_id: B-1006
+    sheets: 600
+    quoted_ship_date: 2026-09-22
+    attributes: {product: business_card, stock: cotton, lamination: none, corner: square, size: 85x55}
+    qc_rejected: true
+
+  - batch_id: B-1007
+    sheets: 300
+    quoted_ship_date: 2026-09-24
+    attributes: {product: business_card, stock: 16pt, lamination: gloss, corner: square, size: 55x55}

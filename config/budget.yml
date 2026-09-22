@@ -1,0 +1,37 @@
+# Press time budgets and makeready.
+#
+# PLACEHOLDER VALUES. The makeready figures are invented. The Aug-Sep analysis
+# is meant to establish how press hours actually split between changeover,
+# idle and unstaffed; until it does, every duration this file produces is
+# indicative only. They live in config so that replacing them with measured
+# numbers touches no code.
+
+time_budget:
+  # When a bucket overflows, let it borrow unused time from buckets with
+  # headroom rather than truncating. The press total still applies.
+  allow_reallocation: true
+
+  buckets:
+    - id: business_cards
+      share: 0.6
+      when:
+        attributes:
+          product: business_card
+
+    - id: postcards
+      share: 0.25
+      when:
+        attributes:
+          product: postcard
+
+    - id: holiday_cards
+      share: 0.15
+      when:
+        attributes:
+          product: holiday_card
+
+makeready:
+  default_minutes: 2.0          # placeholder
+  changeover_minutes: 15.0      # placeholder
+  # Attributes whose change between consecutive batches costs a changeover.
+  changeover_attributes: [stock, lamination]

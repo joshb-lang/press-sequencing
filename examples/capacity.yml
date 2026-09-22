@@ -1,0 +1,25 @@
+# What a supervisor states is available at shift start. Capacity is an input:
+# the sequence recalculates from it, rather than assuming a full floor.
+#
+# A press absent from this list is not on shift. A press with operators: 0 is
+# on shift but unstaffed, which is a different fact and worth recording -
+# unstaffed press hours are one of the numbers the Aug-Sep analysis needs.
+
+shift_date: 2026-09-22
+
+presses:
+  - id: press_2
+    hours: 8
+    operators: 1
+
+  - id: press_3
+    hours: 8
+    operators: 1
+
+  - id: press_5
+    hours: 4
+    operators: 1
+
+  - id: ricoh
+    hours: 8
+    operators: 0     # on the floor, nobody on it

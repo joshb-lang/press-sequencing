@@ -1,0 +1,39 @@
+# Where work may run at all. Not a rule type - see docs/rule-vocabulary.md.
+#
+# These are currently held as operator knowledge and routinely violated. Each
+# is real; each encoding of it is a first pass. `status: unverified` means the
+# constraint is genuine but this expression of it has not been confirmed with
+# the floor. Nothing here should be enforced on the floor while it says
+# unverified.
+
+eligibility:
+  - id: holiday_cards_not_press_5
+    status: unverified
+    when:
+      attributes:
+        product: holiday_card
+    exclude_presses: [press_5]
+
+  - id: cotton_not_ricoh_after_qc_rejection
+    status: unverified
+    note: >
+      Cotton must not route to the Ricoh after QC rejection. Conditional on QC
+      state, not on stock alone: cotton that has not been rejected is
+      unaffected.
+    when:
+      attributes:
+        stock: cotton
+      qc_rejected: true
+    exclude_presses: [ricoh]
+
+  - id: laminated_work_conveyor_pairing
+    status: unverified
+    note: >
+      Conveyor-to-laminator pairings. Encoded as "laminated work only runs on
+      presses paired to a laminator". The actual pairings are per conveyor and
+      need confirming with Jennifer Raposo before this is trusted - the press
+      list below is a guess.
+    when:
+      attributes:
+        lamination: gloss
+    allow_only_presses: [press_2, press_3]

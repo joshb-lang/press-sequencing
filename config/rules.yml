@@ -1,0 +1,44 @@
+# The rule pipeline. Rules run top to bottom; each sees the output of the one
+# before it, so this order is part of the configuration.
+#
+# The vocabulary is closed: ordering, alternation, grouping. Anything else is
+# a template built from these. If something here wants a fourth type, that is
+# a signal to re-read docs/rule-vocabulary.md, not to add one.
+
+pipeline:
+  # Keep lamination in blocks. Alternating gloss and matte breaks delivery
+  # stacking, so this is a grouping rule and deliberately not an alternation.
+  - id: group_by_lamination
+    type: grouping
+    attribute: lamination
+
+  # Group by size within the block, so packing stays efficient.
+  - id: group_by_size
+    type: grouping
+    attribute: size
+
+  # Corner alternation on lanes 2.1, 2.2 and 3.1: four rounded, four square.
+  # This is the July behaviour, as a count of batches.
+  - id: corner_alternation_batches
+    type: alternation
+    class_a: rounded_corner
+    class_b: square_corner
+    count: 4
+    unit: batches
+    applies_to:
+      lanes: ["2.1", "2.2", "3.1"]
+
+  # The planned replacement, alternating by 204 sheets instead of 4 batches so
+  # small batches stop consuming a whole slot and less efficient packing is
+  # grouped. NOT IMPLEMENTED on the floor. It is expressible here and switched
+  # on in config rather than in code; enable this and disable the rule above
+  # when the change is agreed.
+  - id: corner_alternation_sheets
+    type: alternation
+    enabled: false
+    class_a: rounded_corner
+    class_b: square_corner
+    count: 204
+    unit: sheets
+    applies_to:
+      lanes: ["2.1", "2.2", "3.1"]
