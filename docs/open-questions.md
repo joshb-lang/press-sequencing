@@ -13,25 +13,31 @@ validate` prints the list.
 
 | What | Encoded as | Needs |
 |---|---|---|
-| Holiday cards excluded from Press 5 | Eligibility exclusion on `product: holiday_card` | Confirm the attribute name and whether the exclusion is absolute or conditional |
 | Cotton must not route to the Ricoh after QC rejection | Eligibility exclusion conditional on `qc_rejected` | Confirm that clean cotton really is unaffected |
 | Conveyor-to-laminator pairings | `allow_only_presses` for gloss work | The actual pairings. The press list in config is a guess |
 | Gloss/matte and delivery stacking | Grouping rule on `lamination` | Confirm that grouping is sufficient, and whether matte or gloss should lead |
+| Pearl runs last on Press 5 | **Not encoded** | Jennifer asked for this on 27 August. She has since confirmed she is fine with the order the lane 5.1 SQL produces, but that SQL's `print_sequence` has not been read here, so whether pearl is in fact last in it is unverified |
 | Round-corner colour bands printing black | **Not encoded** | What the sequencing consequence is, if any. It may be a prepress or press-setup issue with no sequencing expression |
 
-## Alternation block semantics
+## Alternation: the unit, not the fill
 
-With `unit: sheets` and `count: 204`, does a block:
+**Resolved — the fill.** A block fills up to the cap without overshooting it.
+The lane 5.1 cutter lifts are capped at **205 sheets** and the worked example
+fills a lift to 204 from four 51-sheet batches. `config/rules.yml` now carries
+205, and Jennifer has confirmed she is fine with the order that SQL produces.
 
-- **(a)** fill up to 204 without overshooting, leaving the next batch for the
-  following block, or
-- **(b)** fill until it reaches or exceeds 204?
+**Open — the unit.** Lane 5.1 alternates whole *lifts*: it separates the A/B
+rounded and square streams, builds lifts against the 205-sheet cap, then
+alternates the lifts. `AlternationRule` alternates *batches* against a sheet
+budget. The two produce similar sequences but are not the same computation, and
+a lift is a real object in the 5.1 output — it carries a lift number and a lift
+sheet total that Tableau reads back for validation. This package has no such
+object.
 
-These give different sequences. The code implements **(a)**, on the reasoning
-that 204 is a physical stacking limit and overshooting a physical limit is
-worse than undershooting it. A single batch larger than a whole block is
-taken anyway, since batches are not split. If 204 is a target rather than a
-ceiling, (b) is correct and `AlternationRule.apply` needs a one-line change.
+Since the floor has now accepted the lift-level behaviour, the question is no
+longer whether lifts are the right model but whether this package should
+reproduce them. Doing so means a lift type and a rule that operates on lifts,
+which is a change to the closed vocabulary, not a config edit.
 
 ## Placeholder numbers
 
@@ -63,6 +69,43 @@ is a placeholder and it is changeover-blind. A changeover-aware policy is the
 obvious alternative and is exactly what the plan-vs-dispatch decision and the
 Aug–Sep changeover measurement should settle. Deciding it before those is
 guessing.
+
+## Filler batches — cross-cycle pull-forward
+
+Lane 5.1 pulls future-dated batches into a due-today lift to fill unused
+capacity, consumes them once, and keeps them out of cycle 2. The worked
+example: a 51-sheet due batch pulls three future 51-sheet batches to make a
+204-sheet lift.
+
+`cycle_of` here is a pure partition — cycle 2 never contributes to cycle 1.
+This is accepted floor behaviour that the package does not implement, which
+makes it a divergence rather than an open design question. It needs either a
+pull-forward step or an explicit decision not to have one.
+
+## Are lanes the presses?
+
+Jennifer's conveyor pairings are per lane: 2.1 takes soft touch supers, 2.2
+takes gloss then matte, 3 takes matte lam. `EligibilityConstraint` only has
+`exclude_presses` and `allow_only_presses`, and in `config/presses.yml` lanes
+2.1 and 2.2 both belong to `press_2` — so eligibility cannot tell them apart,
+and the pairings cannot be encoded. Rules can already scope to lanes;
+eligibility cannot.
+
+Two ways out:
+
+- **Add lane-level eligibility.** Smaller change, keeps presses as the unit of
+  capacity.
+- **Make lanes the presses.** Model 2.1, 2.2, 3.1 and 5.1 as presses in their
+  own right. Closer to how the floor talks — the trial is described as being on
+  "lane 5.1", and Jennifer's pairings name lanes, not presses. But it changes
+  the domain model and means a supervisor states hours per lane.
+
+This is why `laminated_work_conveyor_pairing` still carries a guessed press
+list: encoding the real pairings twice, once per shape, is wasted work.
+
+Note also that "gloss super, then gloss OG, then matte" on 2.2 is an *ordering*
+rule, not eligibility. One sentence from Jennifer splits across two config
+files.
 
 ## Carried over, not resolved here
 

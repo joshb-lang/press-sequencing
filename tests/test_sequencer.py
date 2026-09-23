@@ -152,6 +152,7 @@ def test_a_shorter_shift_places_less_work():
 # --- eligibility ------------------------------------------------------------
 
 def test_an_ineligible_batch_goes_to_another_press():
+    # Illustrative constraint, not a live one - see config/eligibility.yml.
     constraint = EligibilityConstraint(
         "holiday_not_5", Condition({"product": "holiday_card"}), exclude_presses=("press_5",)
     )

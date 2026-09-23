@@ -28,17 +28,25 @@ pipeline:
     applies_to:
       lanes: ["2.1", "2.2", "3.1"]
 
-  # The planned replacement, alternating by 204 sheets instead of 4 batches so
-  # small batches stop consuming a whole slot and less efficient packing is
-  # grouped. NOT IMPLEMENTED on the floor. It is expressible here and switched
-  # on in config rather than in code; enable this and disable the rule above
-  # when the change is agreed.
+  # The planned replacement, alternating by a sheet budget instead of 4 batches
+  # so small batches stop consuming a whole slot.
+  #
+  # The cap is 205 sheets. 204 is what four 51-sheet batches come to when they
+  # fill up to that cap, not the limit itself. The fill semantics are confirmed
+  # by the same worked example: a block fills up to the cap without overshooting
+  # it, rather than filling until it reaches or exceeds it.
+  #
+  # STILL DISABLED, for two reasons. It is not implemented on lanes 2.1, 2.2 or
+  # 3.1, which is what this rule is scoped to. And the 205-sheet behaviour that
+  # IS live, on lane 5.1, alternates cutter LIFTS rather than batches - this
+  # batch-level rule approximates that and is not equivalent to it. See
+  # docs/open-questions.md.
   - id: corner_alternation_sheets
     type: alternation
     enabled: false
     class_a: rounded_corner
     class_b: square_corner
-    count: 204
+    count: 205
     unit: sheets
     applies_to:
       lanes: ["2.1", "2.2", "3.1"]

@@ -121,21 +121,24 @@ class AlternationRule:
     and 3.1) and gloss/matte alternation for delivery stacking.
 
     `unit` is "batches" or "sheets". The sheets unit exists because the
-    planned move from four batches to 204 sheets needs small batches to stop
-    consuming a whole slot; it is expressible here and switched on in config,
-    not in code.
+    planned move from four batches to a 205-sheet budget needs small batches to
+    stop consuming a whole slot; it is expressible here and switched on in
+    config, not in code.
 
     Batches matching neither class are appended after the alternated stream,
     in their original relative order. When one side runs out the other side
     continues rather than stalling the press.
 
-    UNCONFIRMED SEMANTICS. A block is filled up to `count` without overshooting
-    it: the next batch is left for the following block if taking it would put
-    the block over budget. A single batch larger than the whole block is still
-    taken, since batches are not split. The other reading - fill until the
-    block reaches or exceeds `count` - gives different sequences, and which one
-    204 sheets is meant to express has not been confirmed with the floor. See
-    docs/open-questions.md.
+    A block is filled up to `count` without overshooting it: the next batch is
+    left for the following block if taking it would put the block over budget.
+    A single batch larger than the whole block is still taken, since batches
+    are not split.
+
+    Confirmed against the lane 5.1 SQL, whose cutter lifts are capped at 205
+    sheets and whose worked example fills a lift to 204 from four 51-sheet
+    batches - filling up to the cap, not until it is reached or exceeded. Note
+    that 5.1 alternates the lifts themselves; this rule alternates batches
+    against a sheet budget, which approximates that without reproducing it.
     """
 
     rule_id: str

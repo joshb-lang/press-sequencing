@@ -17,7 +17,9 @@ PRESS_2 = Press("press_2", "Press 2", 3000, lanes=("2.1",))
 ALL = [PRESS_2, PRESS_5, RICOH]
 
 
-def test_holiday_cards_are_excluded_from_press_5():
+def test_a_constraint_excludes_matching_work_from_a_press():
+    # Illustrative only. The real holiday-cards/Press 5 exclusion was removed
+    # on 23 September as incorrect - see config/eligibility.yml.
     c = EligibilityConstraint(
         "holiday_not_5", Condition({"product": "holiday_card"}), exclude_presses=("press_5",)
     )

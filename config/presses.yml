@@ -17,7 +17,11 @@ presses:
   - id: press_5
     name: "Press 5"
     sheets_per_hour: 3000    # placeholder
-    lanes: []
+    # Lane 5.1 runs holiday cards, cotton and pearlescent, and is the lane the
+    # September trial sequences. Whether lanes should BE the presses rather
+    # than a property of one is an open modelling question - see
+    # docs/open-questions.md.
+    lanes: ["5.1"]
 
   - id: ricoh
     name: "Ricoh"

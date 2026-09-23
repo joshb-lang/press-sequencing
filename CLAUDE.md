@@ -349,8 +349,9 @@ does not close the measurement gap.
 say they are. Jennifer asked on 26 August to have "holiday cards and cotton
 added to press 5 sequence", chased it on 27 August ("still not seeing holiday
 cards as part of press 5 sequence, only pearl and cotton"), and press 5.1 now
-runs exactly that mix. Whatever the original exclusion referred to, it does not
-hold today.
+runs exactly that mix. Josh confirmed with Jennifer on 23 September that she is
+fine with the order the lane 5.1 SQL produces. Whatever the original exclusion
+referred to, it does not hold today. Do not reinstate it from the older text.
 
 **Cotton and the Ricoh is probably unconditional.** The document makes it
 conditional on QC rejection of the batch. Jennifer, 26 August: "Cotton is on the
@@ -370,7 +371,10 @@ alternation is what breaks delivery stacking. Thomas Cornish modelled the
 proposed sequencing in a spreadsheet linked in that thread.
 
 **Pearl runs last on Press 5**, per Jennifer, 27 August ("can pearl be last
-instead of first?"). An ordering rule, not captured above.
+instead of first?"). An ordering rule, not captured above and still not
+encoded: Jennifer's sign-off is on the order the 5.1 SQL produces, and that
+SQL's `print_sequence` has not been read here, so whether pearl is actually
+last in it is unverified.
 
 ## Corrections to the corner-alternation rule
 
@@ -378,7 +382,9 @@ The lift cap is **205 sheets, not 204**. Josh, 23 September: the SQL "builds
 cutter lifts capped at 205 sheets", and the worked example — a 51-sheet
 due-today batch pulling three future 51-sheet batches into a 204-sheet lift —
 is filling *up to* a 205 cap without overshooting it. 204 is an outcome of
-4 × 51, not the limit.
+4 × 51, not the limit. This also settles the fill semantics the scaffold had to
+guess at, and Jennifer's sign-off on the 5.1 order confirms the behaviour is
+accepted on the floor.
 
 ## Two behaviours the closed rule set does not cover
 
@@ -411,8 +417,18 @@ within first shift. That thread never concluded.
 
 Scaffolded 22 September: the closed rule vocabulary, press eligibility as a
 separate concept, capacity as an input, and SLA argue-back, with the July rules
-expressed as configuration under `config/`. Nothing in it is validated — press
-speeds, makeready minutes and budget shares are placeholders, and every
-physical constraint carries `status: unverified`, which `press-seq validate`
-prints. The corrections in this addendum are **not yet applied to `config/`**;
-`docs/open-questions.md` is the list of what a reader should not assume.
+expressed as configuration under `config/`. Press speeds, makeready minutes and
+budget shares remain placeholders, and the constraints that are still guesses
+carry `status: unverified`, which `press-seq validate` prints.
+
+**Applied to `config/` on 23 September**, on the strength of Jennifer's
+sign-off on the lane 5.1 order: the holiday-cards exclusion removed, the sheet
+budget corrected to 205 with the fill semantics confirmed, and lane 5.1 added
+to `press_5`.
+
+**Not applied, and why:** the cotton/Ricoh rule still carries its
+`qc_rejected` condition and the laminator pairings still carry a guessed press
+list — neither is covered by a sign-off about lane 5.1, and the pairings are
+additionally blocked on whether lanes should be modelled as presses. Pearl-last
+is not encoded. `docs/open-questions.md` is the list of what a reader should
+not assume.

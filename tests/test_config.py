@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 
 from press_sequencing.config import ConfigError, load_batches, load_capacity, load_config
+from press_sequencing.model import Batch
 from press_sequencing.rules import AlternationRule
 
 REPO = Path(__file__).resolve().parents[1]
@@ -18,9 +19,11 @@ def test_the_repository_config_loads():
     assert config.classes and config.presses and config.pipeline
 
 
-def test_the_planned_204_sheet_alternation_is_present_but_off():
-    """The move to 204 sheets is expressible in config and not yet live. It is
-    not implemented on the floor, so it must not be enabled here."""
+def test_the_sheet_budget_alternation_is_present_but_off():
+    """The sheet-budget alternation is expressible in config and not live on
+    lanes 2.1, 2.2 or 3.1, so it must not be enabled here. The 205-sheet
+    behaviour that is live runs on lane 5.1 and alternates lifts, which this
+    batch-level rule does not reproduce."""
     config = load_config(REPO / "config")
     ids = {r.rule_id for r in config.pipeline}
     assert "corner_alternation_batches" in ids
@@ -28,7 +31,24 @@ def test_the_planned_204_sheet_alternation_is_present_but_off():
 
     text = (REPO / "config" / "rules.yml").read_text()
     assert "corner_alternation_sheets" in text
-    assert "204" in text
+    assert "count: 205" in text
+    assert "count: 204" not in text
+
+
+def test_holiday_cards_are_not_excluded_from_press_5():
+    """The exclusion was removed on 23 September: lane 5.1 runs holiday cards,
+    cotton and pearlescent, and Jennifer confirmed the order it produces. This
+    guards against the constraint being reinstated from the older context."""
+    config = load_config(REPO / "config")
+    assert not [c for c in config.eligibility if "holiday" in c.constraint_id]
+
+    press_5 = config.press("press_5")
+    cards = Batch("B-1", {"product": "holiday_card"}, 100, date(2026, 9, 23))
+    assert all(c.permits(cards, press_5) for c in config.eligibility)
+
+
+def test_lane_5_1_exists_on_press_5():
+    assert "5.1" in load_config(REPO / "config").press("press_5").lanes
 
 
 def test_corner_alternation_is_four_batches_on_the_three_lanes():

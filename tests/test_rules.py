@@ -81,9 +81,10 @@ def test_alternation_by_batch_count_is_four_and_four(classes):
 
 
 def test_alternation_by_sheets_lets_small_batches_share_a_slot(classes):
-    """The planned 204-sheet change: a slot is a sheet budget, so several small
-    batches fill one slot instead of each consuming a whole slot."""
-    rule = AlternationRule("r", "rounded", "square", count=204, unit="sheets")
+    """The sheet budget: a slot is a sheet count, so several small batches fill
+    one slot instead of each consuming a whole slot. 205 is the lane 5.1 cutter
+    lift cap."""
+    rule = AlternationRule("r", "rounded", "square", count=205, unit="sheets")
     batches = [
         batch("R-1", sheets=100, corner="rounded"),
         batch("R-2", sheets=100, corner="rounded"),
@@ -95,8 +96,22 @@ def test_alternation_by_sheets_lets_small_batches_share_a_slot(classes):
     assert ids(rule.apply(batches, classes)) == ["R-1", "R-2", "S-1", "S-2", "R-3", "S-3"]
 
 
+def test_a_51_sheet_batch_pulls_three_more_into_a_204_sheet_block(classes):
+    """The lane 5.1 worked example: under a 205-sheet cap, four 51-sheet
+    batches make a 204-sheet lift and the fifth starts the next one. This is
+    the case that settles fill-up-to over fill-until-reached - at 204 a fifth
+    batch would overshoot, so the block closes."""
+    rule = AlternationRule("r", "rounded", "square", count=205, unit="sheets")
+    rounded = [batch(f"R-{i}", sheets=51, corner="rounded") for i in range(5)]
+    square = [batch("S-1", sheets=51, corner="square")]
+
+    result = ids(rule.apply(rounded + square, classes))
+    assert result[:4] == ["R-0", "R-1", "R-2", "R-3"]
+    assert result[4] == "S-1"
+
+
 def test_alternation_by_sheets_switches_after_one_oversized_batch(classes):
-    rule = AlternationRule("r", "rounded", "square", count=204, unit="sheets")
+    rule = AlternationRule("r", "rounded", "square", count=205, unit="sheets")
     batches = [
         batch("R-1", sheets=5000, corner="rounded"),
         batch("R-2", sheets=50, corner="rounded"),

@@ -6,14 +6,14 @@
 # the floor. Nothing here should be enforced on the floor while it says
 # unverified.
 
-eligibility:
-  - id: holiday_cards_not_press_5
-    status: unverified
-    when:
-      attributes:
-        product: holiday_card
-    exclude_presses: [press_5]
+# REMOVED 23 September 2026: `holiday_cards_not_press_5`, which excluded
+# holiday cards from Press 5. It was wrong. Jennifer Raposo asked on 26 August
+# to have holiday cards and cotton added to the Press 5 sequence, lane 5.1 runs
+# holiday cards, cotton and pearlescent, and Jennifer has confirmed she is fine
+# with the order the 5.1 SQL produces. Whatever the original exclusion referred
+# to, it does not hold. Do not reinstate it without new evidence from the floor.
 
+eligibility:
   - id: cotton_not_ricoh_after_qc_rejection
     status: unverified
     note: >

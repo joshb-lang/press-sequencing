@@ -37,12 +37,14 @@ Alternate two product styles by a fixed count of batches or sheets.
     lanes: ["2.1", "2.2", "3.1"]
 ```
 
-The `sheets` unit exists for the planned move to 204 sheets: with a batch
-count, a 20-sheet batch consumes a whole slot. With a sheet budget it does
-not. Both are expressible; which one is live is a config change, not a code
-change.
+The `sheets` unit exists for the move to a sheet budget: with a batch count, a
+20-sheet batch consumes a whole slot. With a sheet budget it does not. Both are
+expressible; which one is live is a config change, not a code change.
 
-Block-filling semantics are **unconfirmed** — see
+A block fills up to `count` without overshooting it. This is confirmed — the
+lane 5.1 cutter lifts are capped at 205 sheets and fill to 204 from four
+51-sheet batches. What is *not* settled is the unit of alternation: 5.1
+alternates whole lifts, this rule alternates batches. See
 [open-questions.md](open-questions.md).
 
 ## 3. Grouping
